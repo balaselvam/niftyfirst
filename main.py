@@ -19,8 +19,8 @@ start_app.startup_event()
 @app.get("/")
 async def get_table(request: Request):
     current_time = datetime.now().time()
-    start_time = time(9, 15)
-    end_time = time(15, 30)
+    start_time = time(3, 42)
+    end_time = time(10, 31)
     if start_time <= current_time <= end_time:
         return connection.templates.TemplateResponse("oi_table.html", {"request": request})
     else:

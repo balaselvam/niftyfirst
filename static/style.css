@@ -456,7 +456,7 @@
   .container {
     display: flex; /* Use flexbox layout */
     justify-content: space-around; /* Distribute items with equal space around them */
-    margin: 20px;}
+    margin: 5px;}
     @media (min-width: 576px) {
       .container {
         max-width: 540px; } }

@@ -10,7 +10,7 @@ app = connection.app
 async def startup_event():
     current_time = datetime.now().time()
     start_time = time(3, 45)
-    end_time = time(10, 03)
+    end_time = time(10, 3)
     if start_time <= current_time <= end_time:
         url = "https://groww.in/v1/api/option_chain_service/v1/option_chain/nifty?expiry=2023-08-10"  # Replace this URL with the data source URL
         url_next = "https://groww.in/v1/api/option_chain_service/v1/option_chain/nifty?expiry=2023-08-17"

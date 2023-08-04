@@ -12,8 +12,8 @@ async def startup_event():
     start_time = time(9, 15)
     end_time = time(15, 33)
     if start_time <= current_time <= end_time:
-        url = "https://groww.in/v1/api/option_chain_service/v1/option_chain/nifty?expiry=2023-08-03"  # Replace this URL with the data source URL
-        url_next = "https://groww.in/v1/api/option_chain_service/v1/option_chain/nifty?expiry=2023-08-10"
+        url = "https://groww.in/v1/api/option_chain_service/v1/option_chain/nifty?expiry=2023-08-10"  # Replace this URL with the data source URL
+        url_next = "https://groww.in/v1/api/option_chain_service/v1/option_chain/nifty?expiry=2023-08-17"
         url_far = "https://groww.in/v1/api/option_chain_service/v1/option_chain/nifty?expiry=2023-08-31"
         filename = "dw_data.json"  # Choose the desired filename for the saved data
         filename_next = "dw_data_next.json"

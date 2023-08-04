@@ -5,6 +5,7 @@ import connection
 import check_json
 from pydantic import BaseModel 
 import json 
+import pytz
 
 app = connection.app
 
@@ -18,14 +19,16 @@ start_app.startup_event()
 # Endpoint to serve the HTML template
 @app.get("/")
 async def get_table(request: Request):
-    current_time = datetime.now().time()
-    start_time = time(3, 45)
-    end_time = time(10, 3)
+    ist = pytz.timezone('Asia/Kolkata')
+    current_time = datetime.now(ist).time()
+    #current_time = datetime.now().time()
+    start_time = time(9, 8)
+    end_time = time(15, 33)
     if start_time <= current_time <= end_time:
         return connection.templates.TemplateResponse("oi_table.html", {"request": request})
     else:
         return connection.templates.TemplateResponse("market_closed.html", {"request": request})
-
+    
 oi_Data = []
 oi_Data_next = []
 oi_Data_far = []

@@ -35,7 +35,8 @@ oi_Data_far = []
 # Endpoint to provide the updated table data
 @app.get("/api/table-data")
 async def get_table_data():
-    curr_time = datetime.now().strftime("%d-%B-%Y %H:%M:%S")
+    ist = pytz.timezone('Asia/Kolkata')
+    curr_time = datetime.now(ist).strftime("%d-%B-%Y %H:%M:%S")
     oi_Data.clear()
     oi_Data_next.clear()
     oi_Data_far.clear()

@@ -2,15 +2,18 @@ import connection
 import fetch 
 import asyncio
 from datetime import datetime,time
+import pytz
 
 app = connection.app 
 
 # Start the background task to update the live data
 @app.on_event("startup")
 async def startup_event():
-    current_time = datetime.now().time()
-    start_time = time(3, 45)
-    end_time = time(10, 3)
+    ist = pytz.timezone('Asia/Kolkata')
+    current_time = datetime.now(ist).time()
+    #current_time = datetime.now().time()
+    start_time = time(9, 8)
+    end_time = time(15, 33)
     if start_time <= current_time <= end_time:
         url = "https://groww.in/v1/api/option_chain_service/v1/option_chain/nifty?expiry=2023-08-10"  # Replace this URL with the data source URL
         url_next = "https://groww.in/v1/api/option_chain_service/v1/option_chain/nifty?expiry=2023-08-17"
@@ -21,5 +24,6 @@ async def startup_event():
         asyncio.create_task(fetch.fetch_and_save_data(url, filename))
         asyncio.create_task(fetch.fetch_and_save_data_next(url_next, filename_next))
         asyncio.create_task(fetch.fetch_and_save_data_far(url_far, filename_far))
-    else: print ("Market closed !")
+    else: 
+        print ("Market closed !")
 

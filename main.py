@@ -12,6 +12,8 @@ app = connection.app
 app.state.data_list = {}
 app.state.data_list_next = {}
 app.state.data_list_far = {}
+app.state.data_list_far1 = {}
+app.state.data_list_far2 = {}
 
 #starting the fetch json data event
 start_app.startup_event()
@@ -32,6 +34,8 @@ async def get_table(request: Request):
 oi_Data = []
 oi_Data_next = []
 oi_Data_far = []
+oi_Data_far1 = []
+oi_Data_far2 = []
 # Endpoint to provide the updated table data
 @app.get("/api/table-data")
 async def get_table_data():
@@ -40,10 +44,14 @@ async def get_table_data():
     oi_Data.clear()
     oi_Data_next.clear()
     oi_Data_far.clear()
+    oi_Data_far1.clear()
+    oi_Data_far2.clear()
     try:
         option_chains = app.state.data_list.get("optionChains", [])
         option_chains_next = app.state.data_list_next.get("optionChains", [])
         option_chains_far = app.state.data_list_far.get("optionChains", [])
+        option_chains_far1 = app.state.data_list_far1.get("optionChains", [])
+        option_chains_far2 = app.state.data_list_far2.get("optionChains", [])
         for option_chain in option_chains:
             ce_open_interest = option_chain["callOption"]["openInterest"]
             pe_open_interest = option_chain["putOption"]["openInterest"]
@@ -64,9 +72,24 @@ async def get_table_data():
             ce_volume_far = option_chain_far["callOption"]["volume"]
             pe_volume_far = option_chain_far["putOption"]["volume"]
             oi_Data_far.append({"strikePrice": option_chain_far["strikePrice"], "ce_openInterest": ce_open_interest_far, "pe_openInterest": pe_open_interest_far, "ce_volume": ce_volume_far,"pe_volume": pe_volume_far})
+        
+        for option_chain_far1 in option_chains_far1:
+            ce_open_interest_far1 = option_chain_far1["callOption"]["openInterest"]
+            pe_open_interest_far1 = option_chain_far1["putOption"]["openInterest"]
+            ce_volume_far1 = option_chain_far1["callOption"]["volume"]
+            pe_volume_far1 = option_chain_far1["putOption"]["volume"]
+            oi_Data_far1.append({"strikePrice": option_chain_far1["strikePrice"], "ce_openInterest": ce_open_interest_far1, "pe_openInterest": pe_open_interest_far1, "ce_volume": ce_volume_far1,"pe_volume": pe_volume_far1})
+        
+        for option_chain_far2 in option_chains_far2:
+            ce_open_interest_far2 = option_chain_far2["callOption"]["openInterest"]
+            pe_open_interest_far2 = option_chain_far2["putOption"]["openInterest"]
+            ce_volume_far2 = option_chain_far2["callOption"]["volume"]
+            pe_volume_far2 = option_chain_far2["putOption"]["volume"]
+            oi_Data_far2.append({"strikePrice": option_chain_far2["strikePrice"], "ce_openInterest": ce_open_interest_far2, "pe_openInterest": pe_open_interest_far2, "ce_volume": ce_volume_far2,"pe_volume": pe_volume_far2})
+
     except KeyError as e:
         print(f"Error accessing optionChains: {str(e)}")
-    return {"oi_data": oi_Data,"oi_data_next":oi_Data_next,"oi_data_far":oi_Data_far, "curr_time": curr_time}
+    return {"oi_data": oi_Data,"oi_data_next":oi_Data_next,"oi_data_far":oi_Data_far,"oi_data_far1":oi_Data_far1,"oi_data_far2":oi_Data_far2, "curr_time": curr_time}
 
 # Global variable to store oi_PCR_avg values
 oi_pcr_avg_data = []

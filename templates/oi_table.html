@@ -31,6 +31,8 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                     var tableBody = '';
                     var tableBody_next = '';
                     var tableBody_far = '';
+                    var tableBody_far1 = '';
+                    var tableBody_far2 = '';
                     var curr_time = '<h4 class="text-success">' + data.curr_time + '</h4>';
                     $('#curr_time').html(curr_time);
                     let tot_CE_oi = 0
@@ -39,12 +41,20 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                     let tot_PE_oi_next = 0
                     let tot_CE_oi_far = 0
                     let tot_PE_oi_far = 0
+                    let tot_CE_oi_far1 = 0
+                    let tot_PE_oi_far1 = 0
+                    let tot_CE_oi_far2 = 0
+                    let tot_PE_oi_far2 = 0
                     let tot_CE_vol = 0
                     let tot_PE_vol = 0
                     let tot_CE_vol_next = 0
                     let tot_PE_vol_next = 0
                     let tot_CE_vol_far = 0
                     let tot_PE_vol_far = 0
+                    let tot_CE_vol_far1 = 0
+                    let tot_PE_vol_far1 = 0
+                    let tot_CE_vol_far2 = 0
+                    let tot_PE_vol_far2 = 0
                     
                     data.oi_data.forEach(dataRow => {
                         var strikePrice = dataRow.strikePrice;
@@ -82,33 +92,72 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                         tot_PE_vol_far += pe_volume_far;
                         tableBody_far += '<tr><td>' + (strikePrice)/100 + '</td><td>' + ce_openInterest_far + '</td><td>' + pe_openInterest_far + '</td><td>' + ce_volume_far + '</td><td>' + pe_volume_far + '</td></tr>';
                     });
+                    data.oi_data_far1.forEach(dataRow => {
+                        var strikePrice = dataRow.strikePrice;
+                        var ce_openInterest_far1 = dataRow.ce_openInterest;
+                        var pe_openInterest_far1 = dataRow.pe_openInterest;
+                        var ce_volume_far1 = dataRow.ce_volume;
+                        var pe_volume_far1 = dataRow.pe_volume;
+                        tot_CE_oi_far1 += ce_openInterest_far1;
+                        tot_PE_oi_far1 += pe_openInterest_far1;
+                        tot_CE_vol_far1 += ce_volume_far1;
+                        tot_PE_vol_far1 += pe_volume_far1;
+                        tableBody_far1 += '<tr><td>' + (strikePrice)/100 + '</td><td>' + ce_openInterest_far1 + '</td><td>' + pe_openInterest_far1+ '</td><td>' + ce_volume_far1 + '</td><td>' + pe_volume_far1 + '</td></tr>';
+                    });
+                    data.oi_data_far2.forEach(dataRow => {
+                        var strikePrice = dataRow.strikePrice;
+                        var ce_openInterest_far2 = dataRow.ce_openInterest;
+                        var pe_openInterest_far2 = dataRow.pe_openInterest;
+                        var ce_volume_far2 = dataRow.ce_volume;
+                        var pe_volume_far2 = dataRow.pe_volume;
+                        tot_CE_oi_far2 += ce_openInterest_far2;
+                        tot_PE_oi_far2 += pe_openInterest_far2;
+                        tot_CE_vol_far2 += ce_volume_far2;
+                        tot_PE_vol_far2 += pe_volume_far2;
+                        tableBody_far2 += '<tr><td>' + (strikePrice)/100 + '</td><td>' + ce_openInterest_far2 + '</td><td>' + pe_openInterest_far2 + '</td><td>' + ce_volume_far2 + '</td><td>' + pe_volume_far2 + '</td></tr>';
+                    });
                     var oi_PCR = tot_PE_oi/tot_CE_oi;
                     var oi_PCR_next = tot_PE_oi_next/tot_CE_oi_next;
                     var oi_PCR_far = tot_PE_oi_far/tot_CE_oi_far;
+                    var oi_PCR_far1 = tot_PE_oi_far1/tot_CE_oi_far1;
+                    var oi_PCR_far2 = tot_PE_oi_far2/tot_CE_oi_far2;
                     var vol_PCR = tot_PE_vol/tot_CE_vol;
                     var vol_PCR_next = tot_PE_vol_next/tot_CE_vol_next;
                     var vol_PCR_far = tot_PE_vol_far/tot_CE_vol_far;
+                    var vol_PCR_far1 = tot_PE_vol_far1/tot_CE_vol_far1;
+                    var vol_PCR_far2 = tot_PE_vol_far2/tot_CE_vol_far2;
 
-                    if (oi_PCR != null && oi_PCR_next != null && oi_PCR_far != null) {
-                        oi_PCR_avg = (oi_PCR+oi_PCR_next+oi_PCR_far)/3;
+                    // temporarily not adding 2nd far month for wrong feed
+                    if (oi_PCR != null && oi_PCR_next != null && oi_PCR_far != null && oi_PCR_far1 != null) {
+                        oi_PCR_avg = (oi_PCR+oi_PCR_next+oi_PCR_far+oi_PCR_far1)/4;
                     }
                    
                     oi_PCR = oi_PCR.toFixed(5);
                     oi_PCR_next = oi_PCR_next.toFixed(5);
                     oi_PCR_far = oi_PCR_far.toFixed(5);
+                    oi_PCR_far1 = oi_PCR_far1.toFixed(5);
+                    oi_PCR_far2 = oi_PCR_far2.toFixed(5);
                     oi_PCR_avg = oi_PCR_avg.toFixed(5);
                     vol_PCR = vol_PCR.toFixed(5);
                     vol_PCR_next = vol_PCR_next.toFixed(5);
                     vol_PCR_far = vol_PCR_far.toFixed(5);
+                    vol_PCR_far1 = vol_PCR_far1.toFixed(5);
+                    vol_PCR_far2 = vol_PCR_far2.toFixed(5);
                     $('#ce-oi').html(tot_CE_oi);
                     $('#pe-oi').html(tot_PE_oi);
                     $('#ce-oi-next').html(tot_CE_oi_next);
                     $('#pe-oi-next').html(tot_PE_oi_next);
                     $('#ce-oi-far').html(tot_CE_oi_far);
                     $('#pe-oi-far').html(tot_PE_oi_far);
+                    $('#ce-oi-far1').html(tot_CE_oi_far1);
+                    $('#pe-oi-far1').html(tot_PE_oi_far1);
+                    $('#ce-oi-far2').html(tot_CE_oi_far2);
+                    $('#pe-oi-far2').html(tot_PE_oi_far2);
                     $('#oi-pcr').html(oi_PCR);
                     $('#oi-pcr-next').html(oi_PCR_next);
                     $('#oi-pcr-far').html(oi_PCR_far);
+                    $('#oi-pcr-far1').html(oi_PCR_far1);
+                    $('#oi-pcr-far2').html(oi_PCR_far2);
                     $('#oi-pcr-avg').html(oi_PCR_avg);
                     $('#tot-ce-vol').html(tot_CE_vol);
                     $('#tot-pe-vol').html(tot_PE_vol);
@@ -116,12 +165,20 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                     $('#tot-pe-vol-next').html(tot_PE_vol_next);
                     $('#tot-ce-vol-far').html(tot_CE_vol_far);
                     $('#tot-pe-vol-far').html(tot_PE_vol_far);
+                    $('#tot-ce-vol-far1').html(tot_CE_vol_far1);
+                    $('#tot-pe-vol-far1').html(tot_PE_vol_far1);
+                    $('#tot-ce-vol-far2').html(tot_CE_vol_far2);
+                    $('#tot-pe-vol-far2').html(tot_PE_vol_far2);
                     $('#vol-pcr').html(vol_PCR);
                     $('#vol-pcr-next').html(vol_PCR_next);
                     $('#vol-pcr-far').html(vol_PCR_far);
+                    $('#vol-pcr-far1').html(vol_PCR_far1);
+                    $('#vol-pcr-far2').html(vol_PCR_far2);
                     $('#table-body').html(tableBody);
                     $('#table-body-next').html(tableBody_next);
                     $('#table-body-far').html(tableBody_far);
+                    $('#table-body-far1').html(tableBody_far1);
+                    $('#table-body-far2').html(tableBody_far2);
                 });
             }
 
@@ -272,8 +329,6 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                     <p id="vol-pcr" class="heading-section"></p>
                 </div>   
             </div>
-            
-
         </div>
 
         <div class="table">
@@ -292,7 +347,6 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                     <p id="vol-pcr-next" class="heading-section"></p>
                 </div>   
             </div>
-
         </div>
 
         <div class="table">
@@ -311,9 +365,45 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                     <p id="vol-pcr-far" class="heading-section"></p>
                 </div>   
             </div>
-
         </div> 
+
+        <div class="table">
+            <p class="heading-section">1st Far Month Expiry</p>
+            <div class="row">
+                <div class="col">
+                    <p  class="text-white-50"> OI PCR</p>
+                    <p id="ce-oi-far1" class="text-light"></p>
+                    <p id="pe-oi-far1" class="text-light"></p>
+                    <p id="oi-pcr-far1" class="heading-section"></p>
+                </div>
+                <div class="col">
+                    <p  class="text-white-50"> VOL PCR</p>
+                    <p id="tot-ce-vol-far1" class="text-light"></p>
+                    <p id="tot-pe-vol-far1" class="text-light"></p>
+                    <p id="vol-pcr-far1" class="heading-section"></p>
+                </div>   
+            </div>
+        </div>
+
+        <div class="table">
+            <p class="heading-section">2nd Far Month Expiry</p>
+            <div class="row">
+                <div class="col">
+                    <p  class="text-white-50"> OI PCR</p>
+                    <p id="ce-oi-far2" class="text-light"></p>
+                    <p id="pe-oi-far2" class="text-light"></p>
+                    <p id="oi-pcr-far2" class="heading-section"></p>
+                </div>
+                <div class="col">
+                    <p  class="text-white-50"> VOL PCR</p>
+                    <p id="tot-ce-vol-far2" class="text-light"></p>
+                    <p id="tot-pe-vol-far2" class="text-light"></p>
+                    <p id="vol-pcr-far2" class="heading-section"></p>
+                </div>   
+            </div>
+        </div>
+
         </div>  
-    </div> 
+    </div>
 </body>
 </html>

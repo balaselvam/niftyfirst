@@ -164,6 +164,37 @@ async def fetch_and_save_data_far2(url, filename):
                 print(f"Error during data fetch: {str(e)}")
         await asyncio.sleep(2)
 
+#function to download live 2nd far month expiry data from web
+async def fetch_and_save_data_nifty(url, filename):
+    while True:
+        app.state.data_list_nifty = {}
+        ist = pytz.timezone('Asia/Kolkata')
+        current_time = datetime.now(ist).time()
+        end_time = time(15, 33)
+        if current_time <= end_time:
+            try:
+                response = requests.get(url)
+                response.raise_for_status()  # Raise an exception for HTTP errors (e.g., 404 Not Found)
+                with open(filename, "wb") as f:
+                    f.write(response.content)
+                    print(f"Data downloaded and saved as '{filename}'")
+                # Read data from the JSON file and convert to a list
+                try:
+                    with open(filename, "r") as file:
+                        data = file.read()
+                        if data.strip():
+                            app.state.data_list_nifty = json.loads(data)
+                        else:
+                            #app.state.data_list = {}  # Empty data
+                            continue
+                except json.JSONDecodeError as e:
+                    print(f"Error decoding JSON data: {str(e)}")
+                    app.state.data_list_nifty = {}  # Empty data if decoding fails
+                
+            except requests.RequestException as e:
+                print(f"Error during data fetch: {str(e)}")
+        await asyncio.sleep(2)
+
 # Global variables to store the chart data
 app.state.oi_pcr_avg = {}
 app.state.x_data = []

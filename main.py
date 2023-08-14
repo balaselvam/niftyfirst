@@ -14,6 +14,7 @@ app.state.data_list_next = {}
 app.state.data_list_far = {}
 app.state.data_list_far1 = {}
 app.state.data_list_far2 = {}
+app.state.data_list_nifty = {}
 
 #starting the fetch json data event
 start_app.startup_event()
@@ -30,6 +31,7 @@ async def get_table(request: Request):
         return connection.templates.TemplateResponse("oi_table.html", {"request": request})
     else:
         return connection.templates.TemplateResponse("market_closed.html", {"request": request})
+        #change market_closed.html to oi_table.html to style work after market hours
     
 oi_Data = []
 oi_Data_next = []
@@ -52,6 +54,7 @@ async def get_table_data():
         option_chains_far = app.state.data_list_far.get("optionChains", [])
         option_chains_far1 = app.state.data_list_far1.get("optionChains", [])
         option_chains_far2 = app.state.data_list_far2.get("optionChains", [])
+        
         for option_chain in option_chains:
             ce_open_interest = option_chain["callOption"]["openInterest"]
             pe_open_interest = option_chain["putOption"]["openInterest"]
@@ -89,7 +92,7 @@ async def get_table_data():
 
     except KeyError as e:
         print(f"Error accessing optionChains: {str(e)}")
-    return {"oi_data": oi_Data,"oi_data_next":oi_Data_next,"oi_data_far":oi_Data_far,"oi_data_far1":oi_Data_far1,"oi_data_far2":oi_Data_far2, "curr_time": curr_time}
+    return {"oi_data": oi_Data,"oi_data_next":oi_Data_next,"oi_data_far":oi_Data_far,"oi_data_far1":oi_Data_far1,"oi_data_far2":oi_Data_far2, "spot_price":app.state.data_list_nifty["value"], "open_price":app.state.data_list_nifty["open"], "curr_time": curr_time}
 
 # Global variable to store oi_PCR_avg values
 oi_pcr_avg_data = []
@@ -98,7 +101,8 @@ oi_pcr_avg_data = []
 class OIPCRAvgData(BaseModel):
     curr_time: str
     oi_pcr_avg: float
-
+    spot_price_change: float
+ 
 @app.post("/api/save-oi-pcr-avg")
 async def save_oi_pcr_avg(data: OIPCRAvgData):
 
@@ -118,7 +122,7 @@ async def save_oi_pcr_avg(data: OIPCRAvgData):
 
     try:
         # Save oi_PCR_avg and current time values to the global variable
-        oi_pcr_avg_data.append({"curr_time": data.curr_time, "oi_pcr_avg": data.oi_pcr_avg})
+        oi_pcr_avg_data.append({"curr_time": data.curr_time, "oi_pcr_avg": data.oi_pcr_avg , "spot_price_change":data.spot_price_change})
         # Save oi_pcr_avg_data to a JSON file (modify the file path as needed)
         with open("oi_pcr_avg_data.json", 'w') as file:
             json.dump(oi_pcr_avg_data, file)

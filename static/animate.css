@@ -572,7 +572,6 @@ html, body {
   width: 100vw;
   height: 100vh;
   position: relative;
-  background: linear-gradient(#123, #111);
 }
 
 .snowflake {

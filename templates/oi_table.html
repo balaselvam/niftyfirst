@@ -22,9 +22,7 @@
     <!--suppress JSUnresolvedLibraryURL -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.bundle.min.js"
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!--suppress JSUnresolvedLibraryURL -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         $(document).ready(function() {
             let oi_PCR_avg; // Declare oi_PCR_avg in a higher scope
@@ -156,7 +154,6 @@
                     vol_PCR_far1 = vol_PCR_far1.toFixed(5);
                     vol_PCR_far2 = vol_PCR_far2.toFixed(5);
                     spot_price_change = spot_price_change.toFixed(5);
-                    console.log(spot_price_change)
                     $('#ce-oi').html(tot_CE_oi);
                     $('#pe-oi').html(tot_PE_oi);
                     $('#ce-oi-next').html(tot_CE_oi_next);
@@ -214,7 +211,7 @@
                             contentType: 'application/json',
                             dataType: 'json',
                             success: function(response) {
-                                console.log('oi_PCR_avg and current time sent to server successfully.');
+                                console.log('oi_PCR_avg, spot price  and current time sent to server successfully.');
                             },
                             error: function(error) {
                                 console.error('Error sending oi_PCR_avg and current time to server:', error);
@@ -229,190 +226,7 @@
 
     });
 </script>
-<script>
-    $(document).ready(function () {
-        const config = {
-            type: 'line',
-            data: {
-                labels: Array(30).fill("00:00:00"),
-                datasets: [{
-                    label: "OI PCR",
-                    backgroundColor: 'white',
-                    borderColor: 'black',
-                    data: Array(30).fill(null),
-                    fill: false,
-                },
-                {
-                    label: "PRICE",
-                    backgroundColor: 'black',
-                    borderColor: 'white',
-                    data: Array(30).fill(null),
-                    fill: false,
-                    
-                }],
-            },
-            options: {
-                responsive: true,
-                title: {
-                    display: true,
-                    text: 'Live OI PCR - NIFTY',
-                    fontColor: 'white'
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false,
-                },
-                hover: {
-                    mode: 'nearest',
-                    intersect: true
-                },
-                scales: {
-                    xAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Time',
-                            fontColor: 'white'
-                        },
-                        ticks: {
-                            fontColor: 'white', // Change this to your desired color
-                        }
-                    }],
-                    yAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Value',
-                            fontColor: 'white'
-                        },
-                        ticks: {
-                            stepSize: 0.01,
-                            fontColor: 'white',
-                            //min: 0.5,
-                            //max: 1.5,
-                        }
-                    }]
-                }
-            }
-        };
-
-        const context = document.getElementById('canvas').getContext('2d');
-        const lineChart = new Chart(context, config);
-
-        const source = new EventSource("/chart-data");
-
-        source.onmessage = function (event) {
-            const data = JSON.parse(event.data);
-            const newTime = data.curr_time;
-            
-            // Check if the newTime already exists in the labels array
-            if (!config.data.labels.includes(newTime)) {
-                // Remove the first data point if the array length exceeds 30
-                if (config.data.labels.length === 30) {
-                    config.data.labels.shift();
-                    config.data.datasets[0].data.shift();
-                    config.data.datasets[1].data.shift();
-                }
-                // Add the newTime and data point to the arrays
-                config.data.labels.push(newTime);
-                config.data.datasets[0].data.push(data.oi_pcr_avg);
-                config.data.datasets[1].data.push(data.spot_price_change);
-                lineChart.update();
-            }
-        }
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        const config1 = {
-            type: 'line',
-            data: {
-                labels: Array(30).fill("00:00:00"),
-                datasets: [{
-                    label: "OI PCR",
-                    backgroundColor: 'white',
-                    borderColor: 'black',
-                    data: Array(30).fill(null),
-                    fontColor: 'white',
-                    fill: false,
-                },
-                {
-                    label: "PRICE",
-                    backgroundColor: 'black',
-                    borderColor: 'white',
-                    data: Array(30).fill(null),
-                    fill: false,
-                    
-                }],
-            },
-            options: {
-                responsive: true,
-                title: {
-                    display: true,
-                    text: 'Live OI PCR - NIFTY',
-                    fontColor: 'white'
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false,
-                },
-                hover: {
-                    mode: 'nearest',
-                    intersect: true
-                },
-                scales: {
-                    xAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Time',
-                            fontColor: 'white'
-                        },
-                        ticks: {
-                            fontColor: 'white', // Change this to your desired color
-                        },
-                    }],
-                    yAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Value',
-                            fontColor: 'white'
-                        },
-                        ticks: {
-                            stepSize: 0.01,
-                            fontColor: 'white',
-                            //min: 0.5,
-                            //max: 1.5,
-                        }
-                    }]
-                }
-            }
-        };
-
-        const context1 = document.getElementById('canvas1').getContext('2d');
-        const lineChart1 = new Chart(context1, config1);
-
-        const source = new EventSource("/chart-data");
-
-        source.onmessage = function (event) {
-            const data = JSON.parse(event.data);
-            const newTime = data.curr_time;
-            
-            if (!config1.data.labels.includes(newTime)) {
-                if (config1.data.labels.length === 30) {
-                    config1.data.labels.shift();
-                    config1.data.datasets[0].data.shift();
-                    config1.data.datasets[1].data.shift();
-                }
-                config1.data.labels.push(newTime);
-                config1.data.datasets[0].data.push(data.oi_pcr_avg);
-                config1.data.datasets[1].data.push(data.spot_price_change);
-                lineChart1.update();
-            }
-        }
-    });
-</script>
+<script src="/static/js/chart_config.js"></script>
 </head>
 <body>
       <!-- Navigation Menu -->

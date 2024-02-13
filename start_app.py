@@ -15,7 +15,7 @@ async def startup_event():
     start_time = time(9, 8)
     end_time = time(15, 33)
     if start_time <= current_time <= end_time:
-        url = "https://groww.in/v1/api/option_chain_service/v1/option_chain/nifty?expiry=2023-08-31"  # Replace this URL with the data source URL
+        url = "https://groww.in/v1/api/option_chain_service/v1/option_chain/nifty?expiry=2024-02-15"  # Replace this URL with the data source URL
         url_next = "https://groww.in/v1/api/option_chain_service/v1/option_chain/nifty?expiry=2023-09-07"
         url_far = "https://groww.in/v1/api/option_chain_service/v1/option_chain/nifty?expiry=2023-09-28"
         url_far1 = "https://groww.in/v1/api/option_chain_service/v1/option_chain/nifty?expiry=2023-10-26"
